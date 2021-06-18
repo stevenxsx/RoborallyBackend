@@ -58,6 +58,8 @@ public class GameController {
         Board board = gameService.getBoard(boardId);
         Player player = dtoMapper.convertToEntity(playerDto, board);
         int playerId = gameService.addPlayer(boardId, player);
+        gameService.movePlayer(board, playerId-1, 0, playerId);
+        gameService.setCurrentPlayer(board.getGameId(), playerId);
         return new ResponseEntity<>(playerId, HttpStatus.CREATED);
     }
 
@@ -72,6 +74,7 @@ public class GameController {
         Board board = dtoMapper.convertToEntity(boardDTO);
         int boardId = gameService.saveBoard(board);
         return new ResponseEntity<>(boardId, HttpStatus.CREATED);
+        // http://localhost:8080/board
     }
 
     /**
@@ -113,6 +116,4 @@ public class GameController {
         gameService.switchCurrentPlayer(boardId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }

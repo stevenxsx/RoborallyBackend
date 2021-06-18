@@ -5,34 +5,50 @@ import com.example.demo.exceptions.DaoException;
 import com.example.demo.exceptions.ServiceException;
 import com.example.demo.model.Board;
 import com.example.demo.model.Player;
+import com.example.demo.model.admin.Game;
+import com.example.demo.model.admin.User;
+import com.example.demo.service.interfaces.IGameAdminService;
 import com.example.demo.service.interfaces.IGameService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The run method is executed upon startup, this can be used to do some data seeding.
  */
 @Component
 public class DataLoader implements ApplicationRunner {
-    private final IGameService gameService;
+    private final IGameAdminService gameAdminService;
 
-    public DataLoader(IGameService gameService) {
-        this.gameService = gameService;
+
+    public DataLoader(IGameAdminService gameAdminService) {
+        this.gameAdminService = gameAdminService;
+    }
+
+    public void createGame(String Name) throws ServiceException, DaoException {
+        Game game = new Game(Name, -1, false);
+        gameAdminService.saveGame(game);
+        User user = new User(1, "Oline");
+        User user2 = new User(2, "Mike");
+        User user3 = new User(3, "Lucas");
+        User user4 = new User(4, "Daniel");
+        User user5 = new User(5, "Steven");
+        gameAdminService.addUser(user);
+        gameAdminService.addUser(user2);
+        gameAdminService.addUser(user3);
+        gameAdminService.addUser(user4);
+        gameAdminService.addUser(user5);
     }
 
     @Override
     public void run(ApplicationArguments args) throws ServiceException, DaoException {
-        Board board = new Board(8, 8, "Board1");
-        gameService.saveBoard(board);
-        Player player = new Player(board, "blue", "Player1Name");
-        gameService.addPlayer(board.getGameId(), player);
-        gameService.setCurrentPlayer(board.getGameId(), player.getPlayerId());
-        gameService.moveCurrentPlayer(board.getGameId(), 1, 1);
-        player = new Player(board, "green", "Player2Name");
-        gameService.addPlayer(board.getGameId(), player);
-        gameService.movePlayer(board, 4, 4, player.getPlayerId());
-        /*gameService.switchCurrentPlayer(board);*/
+        createGame("Nybegynder");
+        createGame("Middelmådig");
+
+
 
     }
 }

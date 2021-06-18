@@ -1,12 +1,12 @@
 package com.example.demo.util.mapping;
 
-import com.example.demo.controller.GameController.BoardDto;
-import com.example.demo.controller.GameController.PlayerDto;
-import com.example.demo.controller.GameController.SpaceDto;
+import com.example.demo.controller.GameController.*;
 import com.example.demo.exceptions.MappingException;
 import com.example.demo.model.Board;
 import com.example.demo.model.Player;
 import com.example.demo.model.Space;
+import com.example.demo.model.admin.Game;
+import com.example.demo.model.admin.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,9 +45,8 @@ public class DtoMapper implements IDtoMapper {
         }
 
         if (board.getPlayersNumber() > 0) {
-            boardDto.setPlayerDtos(new PlayerDto[board.getPlayersNumber()]);
             for (int i = 0; i < board.getPlayersNumber(); i++) {
-                boardDto.getPlayerDtos()[i] = convertToDto(board.getPlayer(i));
+                boardDto.getPlayerDtos().add(convertToDto(board.getPlayer(i)));
             }
         }
 
@@ -76,6 +75,32 @@ public class DtoMapper implements IDtoMapper {
         return spaceDto;
     }
 
+
+    @Override
+    public GameDto convertToDto(Game game) throws MappingException {
+        if(game == null){
+            throw new MappingException("Game was null");
+        }
+        GameDto gameDto = new GameDto();
+        gameDto.setGameName(game.gameName);
+        gameDto.setUsers(game.gameUsers);
+        gameDto.setGameId(game.gameId);
+        gameDto.setGameStarted(game.gameStarted);
+        return gameDto;
+    }
+
+    @Override
+    public UserDTO convertToDto(User user) throws MappingException {
+        if(user == null){
+            throw new MappingException("Game was null");
+        }
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName(user.playerName);
+        userDTO.setPlayerId(user.playerId);
+        return userDTO;
+    }
+
     public Board convertToEntity(BoardDto boardDto) {
         Board board = new Board(boardDto.getWidth(), boardDto.getHeight(), boardDto.getBoardName());
         if (boardDto.getBoardId() != -1) {
@@ -96,8 +121,13 @@ public class DtoMapper implements IDtoMapper {
             throw new MappingException("Board was null when trying to convert PlayerDto to Player");
         }
         if (playerDto.getPlayerId() == null) { //If we have not provided a player id, we are creating a new player
-            return new Player(board, playerDto.getPlayerColor(), playerDto.getPlayerName());
+            return new Player(board);
         }
         return null;
+    }
+
+    public Game convertToEntity(GameDto gameDto) {
+        Game game = new Game(gameDto.getGameName(), gameDto.getGameId(), gameDto.getGameStarted(), gameDto.getUsers());
+        return game;
     }
 }
