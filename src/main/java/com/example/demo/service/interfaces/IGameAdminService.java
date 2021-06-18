@@ -28,4 +28,5 @@ public interface IGameAdminService {
 
     void addUser(User user) throws ServiceException, DaoException;
 
+    Collection<User> getUsers() throws ServiceException, DaoException;
 }

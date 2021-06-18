@@ -3,6 +3,7 @@ package com.example.demo.gameAdminController;
 import com.example.demo.controller.GameController.BoardDto;
 import com.example.demo.controller.GameController.GameDto;
 import com.example.demo.controller.GameController.UserDTO;
+import com.example.demo.dal.interfaces.IUserDao;
 import com.example.demo.exceptions.DaoException;
 import com.example.demo.exceptions.MappingException;
 import com.example.demo.exceptions.ServiceException;
@@ -89,5 +90,15 @@ public class GameAdminController {
             return null;
     }
 
-
+    @PostMapping("/game/{gameId}/user/{userName}")
+    public ResponseEntity<Void> addUserToBackEnd(@PathVariable("gameId") int gameId, @PathVariable("userName") String userName) throws ServiceException, MappingException, DaoException{
+        Game game = gameAdminService.getGame(gameId);
+        for(User user: gameAdminService.getUsers()){
+            if(user.playerName.equals(userName)){
+                game.getGameUsers().add(user);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

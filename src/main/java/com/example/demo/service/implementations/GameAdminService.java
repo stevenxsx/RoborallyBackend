@@ -88,4 +88,9 @@ public class GameAdminService implements IGameAdminService {
         userDao.createUser(user);
     }
 
+    @Override
+    public Collection<User> getUsers() throws ServiceException, DaoException{
+        return userDao.getUsers();
+    }
+
 }

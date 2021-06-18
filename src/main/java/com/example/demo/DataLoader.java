@@ -35,12 +35,10 @@ public class DataLoader implements ApplicationRunner {
         User user2 = new User(2, "Mike");
         User user3 = new User(3, "Lucas");
         User user4 = new User(4, "Daniel");
-        User user5 = new User(5, "Steven");
         gameAdminService.addUser(user);
         gameAdminService.addUser(user2);
         gameAdminService.addUser(user3);
         gameAdminService.addUser(user4);
-        gameAdminService.addUser(user5);
     }
 
     @Override
